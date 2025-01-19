@@ -8,6 +8,6 @@ dp = Dispatcher()
 
 dp.include_router(start.router)
 
-if __name__ == "__main__":
+if __name__ == "__bot__":
     print("Бот успешно запущен!")
 
