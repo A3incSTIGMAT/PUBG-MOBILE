@@ -8,7 +8,9 @@ WORKDIR /app
 COPY . /app
 
 # Устанавливаем зависимости
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Указываем команду для запуска
 CMD ["python", "-m", "bot.main"]
+
