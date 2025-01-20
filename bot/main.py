@@ -15,8 +15,8 @@ PORT = os.getenv("PORT", 8000)
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN)
 
-# Создаем диспетчер правильно
-dp = Dispatcher(bot)
+# Создаем диспетчер с аргументом bot
+dp = Dispatcher(bot=bot)
 
 # Функция для обработки старта приложения
 async def on_startup(app):
@@ -37,6 +37,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+ сервер
 
 
 
