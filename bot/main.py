@@ -22,7 +22,7 @@ else:
 bot = Bot(token=BOT_TOKEN)
 
 # Создаем диспетчер с аргументом bot
-dp = Dispatcher(bot=bot)
+dp = Dispatcher()
 
 # Функция для обработки старта приложения
 async def on_startup(app):
@@ -30,9 +30,10 @@ async def on_startup(app):
     await bot.set_webhook(WEBHOOK_URL)
 
 # Обработчик для команды /start
-@dp.message_handler(commands=['start'])
+@dp.message()
 async def send_welcome(message: types.Message):
-    await message.reply("Привет! Я твой бот. Чем могу помочь?")
+    if message.text.startswith('/start'):
+        await message.reply("Привет! Я твой бот. Чем могу помочь?")
 
 # Обработчик для получения webhook-запросов
 async def webhook(request):
@@ -53,6 +54,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+
 
 
 
