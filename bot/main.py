@@ -1,8 +1,10 @@
+import asyncio
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Update
 from dotenv import load_dotenv
 import os
+from aiogram.exceptions import TelegramRetryAfter
 
 # Загружаем переменные окружения из .env файла
 load_dotenv()
@@ -26,8 +28,14 @@ dp = Dispatcher()
 
 # Функция для обработки старта приложения
 async def on_startup(app):
-    # Устанавливаем webhook
-    await bot.set_webhook(WEBHOOK_URL)
+    try:
+        # Устанавливаем webhook
+        await bot.set_webhook(WEBHOOK_URL)
+    except TelegramRetryAfter as e:
+        print(f"Flood control exceeded. Retrying after {e.timeout} seconds.")
+        # Ждем указанное количество времени и повторяем попытку
+        await asyncio.sleep(e.timeout)
+        await bot.set_webhook(WEBHOOK_URL)
 
 # Обработчик для команды /start
 @dp.message()
@@ -54,6 +62,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+
 
 
 
