@@ -5,7 +5,8 @@ from aiogram.types import Update
 from dotenv import load_dotenv
 import os
 from aiogram.exceptions import TelegramRetryAfter
-from handlers import router as handlers_router  # Импортируем роутер из handlers.py
+from bot.handlers import router as handlers_router
+
 
 # Загружаем переменные окружения из .env файла
 load_dotenv()
