@@ -1,40 +1,25 @@
-from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
+import os
 
-from bot.config import BOT_TOKEN, WEBHOOK_URL, PORT
-from bot.handlers import router
+# Обработчик старта приложения
+async def on_startup(app):
+    # Твой код инициализации, например, настройка соединений
+    print("Приложение запускается...")
 
-# Инициализация бота и диспетчера
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(storage=MemoryStorage())
+# Обработчик маршрута
+async def handle(request):
+    return web.Response(text="Hello, world")
 
-# Регистрация роутеров
-dp.include_router(router)
+# Настройка приложения
+app = web.Application()
 
-# Обработчик входящих запросов
-async def handle_webhook(request):
-    update = await request.json()
-    await bot.feed_update(update)
-    return web.Response()
+# Регистрируем on_startup как функцию с аргументом
+app.on_startup.append(on_startup)
 
-# Настройка веб-сервера
-def main():
-    app = web.Application()
-    app.router.add_post("/", handle_webhook)
+# Регистрируем маршруты
+app.router.add_get('/', handle)
 
-    # Устанавливаем вебхук
-    async def on_startup():
-        await bot.set_webhook(WEBHOOK_URL)
+# Запускаем сервер на заданном порту (например, PORT = 8080)
+PORT = int(os.environ.get("PORT", 8080))
+web.run_app(app, port=PORT)
 
-    async def on_shutdown():
-        await bot.delete_webhook()
-        await bot.session.close()
-
-    app.on_startup.append(on_startup)
-    app.on_cleanup.append(on_shutdown)
-
-    web.run_app(app, port=PORT)
-
-if __name__ == "__main__":
-    main()
