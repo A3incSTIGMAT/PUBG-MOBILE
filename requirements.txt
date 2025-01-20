@@ -1,5 +1,4 @@
 aiogram==3.0.0
-flask==2.0.0
 aiohttp~=3.8.5
-
-
+flask==2.0.0
+magic-filter~=1.0.11
