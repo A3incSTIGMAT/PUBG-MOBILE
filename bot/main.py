@@ -1,5 +1,5 @@
 from aiohttp import web
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.types import Update
 from dotenv import load_dotenv
 import os
@@ -29,6 +29,11 @@ async def on_startup(app):
     # Устанавливаем webhook
     await bot.set_webhook(WEBHOOK_URL)
 
+# Обработчик для команды /start
+@dp.message_handler(commands=['start'])
+async def send_welcome(message: types.Message):
+    await message.reply("Привет! Я твой бот. Чем могу помочь?")
+
 # Обработчик для получения webhook-запросов
 async def webhook(request):
     json_str = await request.json()  # Получаем данные запроса
@@ -48,6 +53,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+
 
 
 
