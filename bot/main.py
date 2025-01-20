@@ -12,8 +12,10 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 PORT = os.getenv("PORT", 8000)
 
-# Инициализация бота и диспетчера
+# Инициализация бота
 bot = Bot(token=BOT_TOKEN)
+
+# Создаем диспетчер правильно
 dp = Dispatcher(bot)
 
 # Функция для обработки старта приложения
@@ -35,5 +37,6 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+
 
 
