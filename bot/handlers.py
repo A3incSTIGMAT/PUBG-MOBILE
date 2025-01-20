@@ -39,6 +39,5 @@ async def help_command(message: Message):
     )
     await message.answer(commands)
 
-# Добавьте остальные обработчики по аналогии с тем, как это сделано для /start и /help
 
 
