@@ -26,7 +26,7 @@ else:
 bot = Bot(token=BOT_TOKEN)
 
 # Создаем диспетчер с аргументом bot
-dp = Dispatcher(bot)
+dp = Dispatcher(bot=bot)
 
 # Регистрируем роутеры с хендлерами
 dp.include_router(handlers_router)
@@ -61,6 +61,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+
 
 
 
