@@ -46,8 +46,9 @@ async def on_startup(app):
 async def webhook(request):
     json_str = await request.json()  # Получаем данные запроса
     update = Update(**json_str)  # Преобразуем их в объект Update
-    await dp.process_update(update)  # Обрабатываем обновление
+    await dp.feed_webhook(update)  # Обрабатываем обновление
     return web.Response(status=200)  # Ответ
+
 
 # Создаем приложение aiohttp
 app = web.Application()
