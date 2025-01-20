@@ -30,13 +30,19 @@ async def webhook(request):
     await dp.process_update(update)  # Обрабатываем обновление
     return web.Response(status=200)  # Ответ
 
-# Создаем приложение aiohttp и добавляем обработчик webhook
-app = web.Application(on_startup=[on_startup])
+# Создаем приложение aiohttp
+app = web.Application()
+
+# Добавляем обработчик старта в список on_startup
+app.on_startup.append(on_startup)
+
+# Добавляем обработчик для webhook
 app.router.add_post('/webhook', webhook)
 
 # Запуск приложения
 if __name__ == '__main__':
     web.run_app(app, host='0.0.0.0', port=int(PORT))  # Запускаем сервер
+
 
 
 
