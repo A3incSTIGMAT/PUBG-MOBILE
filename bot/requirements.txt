@@ -1,3 +1,0 @@
-aiogram==3.x
-aiohttp==3.8.6
-
