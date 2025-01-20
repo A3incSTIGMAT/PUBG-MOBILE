@@ -1,7 +1,6 @@
 import asyncio
 from aiohttp import web
-from aiogram import Bot
-from aiogram.webhook.aiohttp import WebhookDispatcher
+from aiogram import Bot, Dispatcher
 from aiogram.types import Update
 from dotenv import load_dotenv
 import os
@@ -26,8 +25,8 @@ else:
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN)
 
-# Создаем WebhookDispatcher
-dp = WebhookDispatcher(bot)
+# Создаем обычный Dispatcher
+dp = Dispatcher()
 
 # Регистрируем роутеры с хендлерами
 dp.include_router(handlers_router)
@@ -62,6 +61,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
    web.run_app(app, host='0.0.0.0', port=PORT)  # Запускаем сервер на порту 10000
+
 
 
 
