@@ -1,68 +1,74 @@
-import asyncio
-from aiohttp import web
-from aiogram import Bot, Dispatcher
-from aiogram.types import Update
-from dotenv import load_dotenv
+import logging
 import os
-from aiogram.exceptions import TelegramRetryAfter
-from bot.handlers import router as handlers_router
+from aiohttp import web
+from aiogram import Bot, Dispatcher, Router
+from aiogram.types import Message, Update
+from aiogram.filters import Command
 
-# Загружаем переменные окружения из .env файла
-load_dotenv()
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# Загружаем токен и URL вебхука
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
-PORT = int(os.getenv("PORT", 10000))  # Порт по умолчанию 10000
+# Токен вашего бота, полученный через BotFather
+API_TOKEN = os.getenv("API_TOKEN")
+if not API_TOKEN:
+    raise ValueError("API_TOKEN is not set. Please set it as an environment variable.")
 
-# Отладочный код для проверки переменных окружения
-if not BOT_TOKEN or not WEBHOOK_URL:
-    raise ValueError("BOT_TOKEN или WEBHOOK_URL не указаны. Проверьте файл .env")
-else:
-    print(f"BOT_TOKEN: {BOT_TOKEN}, WEBHOOK_URL: {WEBHOOK_URL}")
-
-# Инициализация бота
-bot = Bot(token=BOT_TOKEN)
-
-# Создаем Dispatcher
+# Инициализация бота и диспетчера
+bot = Bot(token=API_TOKEN, parse_mode="HTML")
 dp = Dispatcher()
 
-# Регистрируем роутеры с хендлерами
-dp.include_router(handlers_router)
+# Создание маршрутизатора
+router = Router()
 
-# Функция для обработки старта приложения
-async def on_startup(app):
-    try:
-        # Устанавливаем webhook
-        await bot.set_webhook(WEBHOOK_URL)
-    except TelegramRetryAfter as e:
-        print(f"Flood control exceeded. Retrying after {e.timeout} seconds.")
-        # Ждем указанное количество времени и повторяем попытку
-        await asyncio.sleep(e.timeout)
-        await bot.set_webhook(WEBHOOK_URL)
+# Обработчик команды /start
+@router.message(Command("start"))
+async def cmd_start(message: Message):
+    await message.answer("Привет! Я ваш бот. Чем могу помочь?")
 
-# Обработчик для получения webhook-запросов
-async def webhook(request):
-    json_str = await request.json()  # Получаем данные запроса
-    update = Update(**json_str)  # Преобразуем их в объект Update
+# Обработчик команды /help
+@router.message(Command("help"))
+async def cmd_help(message: Message):
+    commands = (
+        "/start - Начать игру или взаимодействие с ботом\n"
+        "/help - Список всех команд\n"
+        "/rules - Правила игры\n"
+        "/about - О боте"
+    )
+    await message.answer(commands)
 
-    # Используем Dispatcher для обработки обновлений
-    await dp.process_update(update)
+# Обработчик сообщений (эхо-бот)
+@router.message()
+async def echo(message: Message):
+    await message.answer(message.text)
 
-    return web.Response(status=200)  # Ответ
+# Регистрация маршрутов
+dp.include_router(router)
 
-# Создаем приложение aiohttp
+# Функция для настройки вебхука
+async def on_start(request: web.Request):
+    return web.Response(text="Bot is up and running!")
+
+# Веб-сервер с aiohttp
+async def on_webhook(request: web.Request):
+    update = Update.parse_obj(await request.json())
+    await dp.process_update(update)  # Обрабатываем обновление через диспетчер
+    return web.Response()
+
+# Основная асинхронная функция для запуска бота
+async def on_shutdown():
+    await bot.close()
+
+# Инициализация веб-приложения aiohttp
 app = web.Application()
+app.add_routes([web.get('/', on_start), web.post(f'/{API_TOKEN}', on_webhook)])
 
-# Добавляем обработчик старта в список on_startup
-app.on_startup.append(on_startup)
+# Запуск сервера на порту 10000
+if __name__ == "__main__":
+    logger.info("Starting bot...")
+    web.run_app(app, port=10000)  # Порт изменен на 10000
+ 
 
-# Добавляем обработчик для webhook
-app.router.add_post('/webhook', webhook)
-
-# Запуск приложения
-if __name__ == '__main__':
-   web.run_app(app, host='0.0.0.0', port=PORT)  # Запускаем сервер на порту 10000
 
 
 
