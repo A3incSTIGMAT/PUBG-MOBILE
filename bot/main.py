@@ -7,7 +7,6 @@ import os
 from aiogram.exceptions import TelegramRetryAfter
 from bot.handlers import router as handlers_router
 
-
 # Загружаем переменные окружения из .env файла
 load_dotenv()
 
@@ -25,7 +24,7 @@ else:
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN)
 
-# Создаем обычный Dispatcher
+# Создаем Dispatcher
 dp = Dispatcher()
 
 # Регистрируем роутеры с хендлерами
@@ -46,7 +45,10 @@ async def on_startup(app):
 async def webhook(request):
     json_str = await request.json()  # Получаем данные запроса
     update = Update(**json_str)  # Преобразуем их в объект Update
-    await dp.process_update(update)  # Обрабатываем обновление
+
+    # Используем Dispatcher для обработки обновлений
+    await dp.process_update(update)
+
     return web.Response(status=200)  # Ответ
 
 # Создаем приложение aiohttp
@@ -61,6 +63,7 @@ app.router.add_post('/webhook', webhook)
 # Запуск приложения
 if __name__ == '__main__':
    web.run_app(app, host='0.0.0.0', port=PORT)  # Запускаем сервер на порту 10000
+
 
 
 
