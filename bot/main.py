@@ -78,17 +78,16 @@ async def on_start(request: web.Request):
 
 # Веб-сервер с aiohttp
 async def on_webhook(request: web.Request):
-    update_data = await request.json()
     try:
-        # Преобразуем JSON-данные в объект Update
-        update = Update.parse_obj(update_data)
-        
+        update_data = await request.json()
+        update = Update.parse_obj(update_data)  # Преобразуем JSON-данные в объект Update
+
         # Используем правильный метод для обработки обновлений
         await dp.process_update(update)  # Обрабатываем обновление через process_update
-        return web.Response(status=200)
+        return web.Response(status=200)  # Отправляем успешный ответ
     except Exception as e:
         logger.error(f"Ошибка обработки обновления вебхука: {e}")
-        return web.Response(status=400)
+        return web.Response(status=400)  # Возвращаем ошибку, если что-то пошло не так
 
 # Функция для регистрации вебхука при старте
 async def on_startup(app: web.Application):
@@ -112,6 +111,7 @@ app.on_startup.append(on_startup)
 if __name__ == "__main__":
     logger.info(f"Запуск бота на порту {port}...")
     web.run_app(app, port=port, host="0.0.0.0")
+
 
 
 
