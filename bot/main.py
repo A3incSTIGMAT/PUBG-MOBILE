@@ -67,7 +67,7 @@ async def on_webhook(request: web.Request):
 # Функция для регистрации вебхука
 async def on_startup(app: web.Application):
     try:
-        await bot.set_webhook(WEBHOOK_URL
+        await bot.set_webhook(WEBHOOK_URL)
 
 
 
