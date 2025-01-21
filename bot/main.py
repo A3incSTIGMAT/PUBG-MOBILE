@@ -15,7 +15,7 @@ if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN is not set. Please set it as an environment variable.")
 
 # Получение порта из переменной окружения для Render
-port = int(os.getenv("PORT", 8080))  # Порт по умолчанию - 8080
+port = int(os.getenv("PORT", 10000))  # Порт по умолчанию - 8080
 
 # Динамический путь вебхука
 WEBHOOK_PATH = f"/webhook/{BOT_TOKEN}"  # Включаем токен в путь
