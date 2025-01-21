@@ -68,6 +68,10 @@ async def on_webhook(request: web.Request):
 async def on_startup(app: web.Application):
     try:
         await bot.set_webhook(WEBHOOK_URL)
+        logger.info(f"Вебхук установлен по адресу {WEBHOOK_URL}")
+    except Exception as e:
+        logger.error(f"Ошибка при установке вебхука: {e}")
+
 
 
 
