@@ -15,12 +15,11 @@ if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN is not set. Please set it as an environment variable.")
 
 # Получение порта из переменной окружения для Render
-port = int(os.getenv("PORT", 10000))  # Порт по умолчанию - 8080
+port = int(os.getenv("PORT", 10000))  # Порт по умолчанию - 10000
 
 # Динамический путь вебхука
-WEBHOOK_PATH = f"/webhook/{BOT_TOKEN}"  # Включаем токен в путь
-WEBHOOK_URL = f"https://pubg-mobile-zzmw.onrender.com{WEBHOOK_PATH}"
-
+WEBHOOK_PATH = f"/webhook"  # Простой путь для вебхука, без токена в URL
+WEBHOOK_URL = f"https://pubg-mobile-zzmw.onrender.com{WEBHOOK_PATH}"  # Указываем домен и путь
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
@@ -89,8 +88,6 @@ async def on_webhook(request: web.Request):
         logger.error(f"Ошибка обработки обновления вебхука: {e}")
         return web.Response(status=400)
 
-
-
 # Функция для регистрации вебхука при старте
 async def on_startup(app: web.Application):
     try:
@@ -112,6 +109,7 @@ app.on_startup.append(on_startup)
 if __name__ == "__main__":
     logger.info(f"Запуск бота на порту {port}...")
     web.run_app(app, port=port, host="0.0.0.0")
+
 
 
     
