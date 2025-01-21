@@ -51,9 +51,14 @@ async def on_start(request: web.Request):
 
 # Веб-сервер с aiohttp
 async def on_webhook(request: web.Request):
-    update = Update.parse_obj(await request.json())
-    await dp.process_update(update)  # Обрабатываем обновление через диспетчер
-    return web.Response()
+    update_data = await request.json()
+    try:
+        update = Update.parse_obj(update_data)
+        await dp.process_update(update)  # Обрабатываем обновление через диспетчер
+        return web.Response(status=200)
+    except Exception as e:
+        logger.error(f"Error processing webhook update: {e}")
+        return web.Response(status=400)
 
 # Основная асинхронная функция для запуска бота
 async def on_shutdown():
@@ -67,6 +72,7 @@ app.add_routes([web.get('/', on_start), web.post(f'/{BOT_TOKEN}', on_webhook)])
 if __name__ == "__main__":
     logger.info("Запуск бота...")
     web.run_app(app, port=10000)  # Порт изменен на 10000
+
 
  
 
