@@ -19,7 +19,7 @@ port = int(os.getenv("PORT", 8080))  # Порт по умолчанию - 8080
 
 # Динамический путь вебхука
 WEBHOOK_PATH = f"/webhook/{BOT_TOKEN}"  # Включаем токен в путь
-WEBHOOK_URL = f"https://<твой-домен>{WEBHOOK_PATH}"  # <твой-домен> нужно заменить на реальный домен
+WEBHOOK_URL = f"https://<A3incSTIGMAT/README.md>{WEBHOOK_PATH}"  # <твой-домен> нужно заменить на реальный домен
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
