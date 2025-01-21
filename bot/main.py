@@ -14,6 +14,10 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN is not set. Please set it as an environment variable.")
 
+# Настройка вебхука
+WEBHOOK_PATH = f"/webhook"
+WEBHOOK_URL = f"https://<твой-домен>{WEBHOOK_PATH}"
+
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher()
@@ -57,21 +61,14 @@ async def on_webhook(request: web.Request):
         await dp.process_update(update)  # Обрабатываем обновление через диспетчер
         return web.Response(status=200)
     except Exception as e:
-        logger.error(f"Error processing webhook update: {e}")
+        logger.error(f"Ошибка обработки обновления вебхука: {e}")
         return web.Response(status=400)
 
-# Основная асинхронная функция для запуска бота
-async def on_shutdown():
-    await bot.close()
+# Функция для регистрации вебхука
+async def on_startup(app: web.Application):
+    try:
+        await bot.set_webhook(WEBHOOK_URL
 
-# Инициализация веб-приложения aiohttp
-app = web.Application()
-app.add_routes([web.get('/', on_start), web.post(f'/{BOT_TOKEN}', on_webhook)])
-
-# Запуск сервера на порту 10000
-if __name__ == "__main__":
-    logger.info("Запуск бота...")
-    web.run_app(app, port=10000)  # Порт изменен на 10000
 
 
  
