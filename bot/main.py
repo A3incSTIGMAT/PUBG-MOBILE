@@ -82,11 +82,13 @@ async def on_webhook(request: web.Request):
     update_data = await request.json()
     try:
         update = Update.parse_obj(update_data)
-        await dp.process_update(update)  # Обрабатываем обновление через диспетчер
+        # Используем новый метод для обработки обновлений
+        await dp.feed_update(update)  # Обрабатываем обновление через feed_update
         return web.Response(status=200)
     except Exception as e:
         logger.error(f"Ошибка обработки обновления вебхука: {e}")
         return web.Response(status=400)
+
 
 # Функция для регистрации вебхука при старте
 async def on_startup(app: web.Application):
