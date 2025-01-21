@@ -80,9 +80,11 @@ async def on_start(request: web.Request):
 async def on_webhook(request: web.Request):
     update_data = await request.json()
     try:
+        # Преобразуем JSON-данные в объект Update
         update = Update.parse_obj(update_data)
+        
         # Используем правильный метод для обработки обновлений
-        await dp.feed_update(update)  # Обрабатываем обновление через feed_update
+        await dp.process_update(update)  # Обрабатываем обновление через process_update
         return web.Response(status=200)
     except Exception as e:
         logger.error(f"Ошибка обработки обновления вебхука: {e}")
@@ -91,6 +93,7 @@ async def on_webhook(request: web.Request):
 # Функция для регистрации вебхука при старте
 async def on_startup(app: web.Application):
     try:
+        # Устанавливаем вебхук
         await bot.set_webhook(WEBHOOK_URL)
         logger.info(f"Вебхук установлен по адресу {WEBHOOK_URL}")
     except Exception as e:
@@ -109,6 +112,7 @@ app.on_startup.append(on_startup)
 if __name__ == "__main__":
     logger.info(f"Запуск бота на порту {port}...")
     web.run_app(app, port=port, host="0.0.0.0")
+
 
 
 
