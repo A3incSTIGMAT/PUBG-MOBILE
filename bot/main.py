@@ -103,7 +103,7 @@ async def on_startup(app: web.Application):
 app = web.Application()
 
 # Регистрация маршрутов
-app.add_routes([web.get('/', on_start), web.post(WEBHOOK_PATH, on_webhook)])
+app.add_routes([web.get('/', on_start), web.post(WEBHOOK_PATH, on_webhook)])  # Убедитесь, что используется POST метод для /webhook
 
 # Установка вебхука при старте приложения
 app.on_startup.append(on_startup)
@@ -112,6 +112,7 @@ app.on_startup.append(on_startup)
 if __name__ == "__main__":
     logger.info(f"Запуск бота на порту {port}...")
     web.run_app(app, port=port, host="0.0.0.0")
+
 
 
 
