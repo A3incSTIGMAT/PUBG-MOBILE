@@ -14,9 +14,12 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN is not set. Please set it as an environment variable.")
 
-# Настройка вебхука
-WEBHOOK_PATH = f"/webhook"
-WEBHOOK_URL = f"https://<твой-домен>{WEBHOOK_PATH}"
+# Получение порта из переменной окружения для Render
+port = int(os.getenv("PORT", 8080))  # Порт по умолчанию - 8080
+
+# Динамический путь вебхука
+WEBHOOK_PATH = f"/webhook/{BOT_TOKEN}"  # Включаем токен в путь
+WEBHOOK_URL = f"https://<твой-домен>{WEBHOOK_PATH}"  # <твой-домен> нужно заменить на реальный домен
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
@@ -64,13 +67,30 @@ async def on_webhook(request: web.Request):
         logger.error(f"Ошибка обработки обновления вебхука: {e}")
         return web.Response(status=400)
 
-# Функция для регистрации вебхука
+# Функция для регистрации вебхука при старте
 async def on_startup(app: web.Application):
     try:
         await bot.set_webhook(WEBHOOK_URL)
         logger.info(f"Вебхук установлен по адресу {WEBHOOK_URL}")
     except Exception as e:
         logger.error(f"Ошибка при установке вебхука: {e}")
+
+# Инициализация веб-приложения aiohttp
+app = web.Application()
+
+# Регистрация маршрутов
+app.add_routes([web.get('/', on_start), web.post(WEBHOOK_PATH, on_webhook)])
+
+# Установка вебхука при старте приложения
+app.on_startup.append(on_startup)
+
+# Запуск сервера на порту, указанном в переменной окружения
+if __name__ == "__main__":
+    logger.info(f"Запуск бота на порту {port}...")
+    web.run_app(app, port=port, host="0.0.0.0")
+
+    
+
 
 
 
