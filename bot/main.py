@@ -10,12 +10,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Токен вашего бота, полученный через BotFather
-API_TOKEN = os.getenv("API_TOKEN")
-if not API_TOKEN:
-    raise ValueError("API_TOKEN is not set. Please set it as an environment variable.")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN is not set. Please set it as an environment variable.")
 
 # Инициализация бота и диспетчера
-bot = Bot(token=API_TOKEN, parse_mode="HTML")
+bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher()
 
 # Создание маршрутизатора
@@ -47,7 +47,7 @@ dp.include_router(router)
 
 # Функция для настройки вебхука
 async def on_start(request: web.Request):
-    return web.Response(text="Bot is up and running!")
+    return web.Response(text="Бот запущен и работает!")
 
 # Веб-сервер с aiohttp
 async def on_webhook(request: web.Request):
@@ -61,12 +61,13 @@ async def on_shutdown():
 
 # Инициализация веб-приложения aiohttp
 app = web.Application()
-app.add_routes([web.get('/', on_start), web.post(f'/{API_TOKEN}', on_webhook)])
+app.add_routes([web.get('/', on_start), web.post(f'/{BOT_TOKEN}', on_webhook)])
 
 # Запуск сервера на порту 10000
 if __name__ == "__main__":
-    logger.info("Starting bot...")
+    logger.info("Запуск бота...")
     web.run_app(app, port=10000)  # Порт изменен на 10000
+
  
 
 
