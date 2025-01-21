@@ -44,6 +44,26 @@ async def cmd_help(message: Message):
     )
     await message.answer(commands)
 
+# Обработчик команды /rules
+@router.message(Command("rules"))
+async def cmd_rules(message: Message):
+    rules = (
+        "1. Будьте вежливы с ботом.\n"
+        "2. Не отправляйте спам.\n"
+        "3. Следите за тем, чтобы ваши запросы были понятными.\n"
+        "4. Используйте команды для взаимодействия с ботом."
+    )
+    await message.answer(rules)
+
+# Обработчик команды /about
+@router.message(Command("about"))
+async def cmd_about(message: Message):
+    about_info = (
+        "Я бот, созданный для демонстрации работы с библиотекой aiogram.\n"
+        "Я могу обрабатывать команды, отвечать на сообщения и помогать вам!"
+    )
+    await message.answer(about_info)
+
 # Обработчик сообщений (эхо-бот)
 @router.message()
 async def echo(message: Message):
@@ -88,6 +108,7 @@ app.on_startup.append(on_startup)
 if __name__ == "__main__":
     logger.info(f"Запуск бота на порту {port}...")
     web.run_app(app, port=port, host="0.0.0.0")
+
 
     
 
