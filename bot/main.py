@@ -23,7 +23,7 @@ WEBHOOK_URL = f"https://pubg-mobile-zzmw.onrender.com{WEBHOOK_PATH}"  # Указ
 
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
-dp = Dispatcher.from_bot(bot)  # Создаём диспетчер из бота
+dp = Dispatcher(bot)  # Создаём диспетчер с переданным ботом
 
 # Обработчик команды /start
 @dp.message(Command("start"))
@@ -93,6 +93,7 @@ def run_app():
 
 if __name__ == "__main__":
     run_app()
+
 
 
 
