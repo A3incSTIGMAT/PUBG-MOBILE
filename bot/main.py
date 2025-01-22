@@ -1,7 +1,7 @@
 import logging
 import os
 from aiohttp import web
-from aiogram import Bot, Dispatcher, Router
+from aiogram import Bot, Dispatcher
 from aiogram.types import Message, Update
 from aiogram.filters import Command
 
@@ -25,16 +25,13 @@ WEBHOOK_URL = f"https://pubg-mobile-zzmw.onrender.com{WEBHOOK_PATH}"  # Указ
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher(bot)  # Связываем диспетчер с ботом
 
-# Создание маршрутизатора
-router = Router()
-
 # Обработчик команды /start
-@router.message(Command("start"))
+@dp.message(Command("start"))
 async def cmd_start(message: Message):
     await message.answer("Привет! Я ваш бот. Чем могу помочь?")
 
 # Обработчик команды /help
-@router.message(Command("help"))
+@dp.message(Command("help"))
 async def cmd_help(message: Message):
     commands = (
         "/start - Начать игру или взаимодействие с ботом\n"
@@ -45,7 +42,7 @@ async def cmd_help(message: Message):
     await message.answer(commands)
 
 # Обработчик команды /rules
-@router.message(Command("rules"))
+@dp.message(Command("rules"))
 async def cmd_rules(message: Message):
     rules = (
         "1. Будьте вежливы с ботом.\n"
@@ -56,7 +53,7 @@ async def cmd_rules(message: Message):
     await message.answer(rules)
 
 # Обработчик команды /about
-@router.message(Command("about"))
+@dp.message(Command("about"))
 async def cmd_about(message: Message):
     about_info = (
         "Я бот, созданный для демонстрации работы с библиотекой aiogram.\n"
@@ -65,19 +62,18 @@ async def cmd_about(message: Message):
     await message.answer(about_info)
 
 # Обработчик сообщений (эхо-бот)
-@router.message()
+@dp.message()
 async def echo(message: Message):
     await message.answer(message.text)
 
-# Регистрация маршрутов
-dp.include_router(router)
-
-# Функция для настройки вебхука
-async def on_start(request):
-    # Здесь добавьте код для обработки вебхуков
+# Функция для обработки вебхуков
+async def on_webhook(request: web.Request):
+    data = await request.json()
+    update = Update(**data)
+    await dp.process_update(update)
     return web.Response(status=200)
 
-# Настройка вебхука
+# Функция для настройки вебхука
 async def setup_webhook(app):
     # Устанавливаем вебхук
     await bot.set_webhook(WEBHOOK_URL)
@@ -87,7 +83,7 @@ def run_app():
     app = web.Application()
 
     # Регистрируем обработчик для вебхука
-    app.router.add_post(WEBHOOK_PATH, on_start)
+    app.router.add_post(WEBHOOK_PATH, on_webhook)
 
     # Устанавливаем вебхук для бота
     app.on_startup.append(setup_webhook)
@@ -97,6 +93,7 @@ def run_app():
 
 if __name__ == "__main__":
     run_app()
+
 
 
 
