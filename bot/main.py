@@ -23,7 +23,7 @@ WEBHOOK_URL = f"https://pubg-mobile-zzmw.onrender.com{WEBHOOK_PATH}"  # Указ
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
-dp = Dispatcher()
+dp = Dispatcher(bot)  # Связываем диспетчер с ботом
 
 # Создание маршрутизатора
 router = Router()
@@ -73,6 +73,31 @@ async def echo(message: Message):
 dp.include_router(router)
 
 # Функция для настройки вебхука
+async def on_start(request):
+    # Здесь добавьте код для обработки вебхуков
+    return web.Response(status=200)
+
+# Настройка вебхука
+async def setup_webhook(app):
+    # Устанавливаем вебхук
+    await bot.set_webhook(WEBHOOK_URL)
+
+# Функция для запуска aiohttp-сервера
+def run_app():
+    app = web.Application()
+
+    # Регистрируем обработчик для вебхука
+    app.router.add_post(WEBHOOK_PATH, on_start)
+
+    # Устанавливаем вебхук для бота
+    app.on_startup.append(setup_webhook)
+
+    # Запускаем сервер на указанном порту
+    web.run_app(app, host="0.0.0.0", port=port)
+
+if __name__ == "__main__":
+    run_app()
+
 
 
 
