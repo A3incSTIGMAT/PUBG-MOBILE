@@ -21,9 +21,9 @@ port = int(os.getenv("PORT", 10000))  # Порт по умолчанию - 10000
 WEBHOOK_PATH = f"/webhook"  # Простой путь для вебхука, без токена в URL
 WEBHOOK_URL = f"https://pubg-mobile-zzmw.onrender.com{WEBHOOK_PATH}"  # Указываем домен и путь
 
-# Инициализация бота и диспетчера
+# Инициализация бота
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
-dp = Dispatcher(bot)  # Связываем диспетчер с ботом
+dp = Dispatcher.from_bot(bot)  # Создаём диспетчер из бота
 
 # Обработчик команды /start
 @dp.message(Command("start"))
@@ -93,6 +93,7 @@ def run_app():
 
 if __name__ == "__main__":
     run_app()
+
 
 
 
