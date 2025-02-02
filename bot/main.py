@@ -65,7 +65,11 @@ async def cmd_about(message: Message):
 # Эхо-обработчик
 @router.message()
 async
+from shop_handlers import router as shop_router
+from inventory_handlers import router as inventory_router
 
+dp.include_router(shop_router)
+dp.include_router(inventory_router)
 
 
 
