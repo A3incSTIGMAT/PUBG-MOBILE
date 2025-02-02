@@ -68,15 +68,20 @@ async def echo(message: Message):
 
 # Функция для обработки вебхуков
 async def on_webhook(request: web.Request):
-    data = await request.json()
-    update = Update(**data)
-    await dp.process_update(update)
-    return web.Response(status=200)
+    try:
+        data = await request.json()
+        update = Update(**data)
+        await dp.process_update(update)
+        return web.Response(status=200)
+    except Exception as e:
+        logger.error(f"Error processing update: {e}")
+        return web.Response(status=500)
 
 # Функция для настройки вебхука
 async def setup_webhook(app):
     # Устанавливаем вебхук
     await bot.set_webhook(WEBHOOK_URL)
+    logger.info(f"Webhook set to: {WEBHOOK_URL}")
 
 # Функция для запуска aiohttp-сервера
 def run_app():
@@ -89,6 +94,7 @@ def run_app():
     app.on_startup.append(setup_webhook)
 
     # Запускаем сервер на указанном порту
+    logger.info(f"Starting bot on port {port}")
     web.run_app(app, host="0.0.0.0", port=port)
 
 if __name__ == "__main__":
