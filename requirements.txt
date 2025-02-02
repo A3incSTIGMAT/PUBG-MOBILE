@@ -3,3 +3,4 @@ aiohttp==3.8.6
 Flask==2.0.0
 MarkupSafe==2.0.1
 pydantic==2.1.1
+aiosqlite>=0.18.0
