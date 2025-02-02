@@ -41,3 +41,22 @@ def init_db():
 
 # Инициализация БД при старте
 init_db()
+def populate_test_data():
+    conn = sqlite3.connect('game.db')
+    cursor = conn.cursor()
+    
+    # Добавляем предметы
+    cursor.executemany('''
+        INSERT INTO items (name, price, type) 
+        VALUES (?, ?, ?)
+    ''', [
+        ("Аптечка", 50, "consumable"),
+        ("Броня 3 уровня", 200, "armor"),
+        ("M416", 300, "weapon")
+    ])
+    
+    conn.commit()
+    conn.close()
+
+# Вызовите эту функцию один раз при первом запуске
+populate_test_data()
