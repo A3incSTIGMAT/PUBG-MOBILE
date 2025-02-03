@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from bot.database import DatabaseManager
 
 router = Router()
-db = Database()
+db = DatabaseManager()
 
 @router.message(Command("battle"))
 async def cmd_battle(message: Message):
