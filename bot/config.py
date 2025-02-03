@@ -1,6 +1,16 @@
 import os
+from dotenv import load_dotenv
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://your-app.onrender.com/webhook")
-WEBHOOK_PATH = "/webhook"
-ADMIN_ID = int(os.getenv("ADMIN_ID", 895844198))  # Замените на ваш ID
+load_dotenv()
+
+class Config:
+    BOT_TOKEN = os.getenv("BOT_TOKEN")
+    ADMIN_ID = int(os.getenv("ADMIN_ID",895844198))
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+    WEBHOOK_PATH = "/webhook"
+    DB_FILE = "game.db"
+
+    @classmethod
+    def check_env(cls):
+        if not cls.BOT_TOKEN:
+            raise ValueError("BOT_TOKEN не установлен в .env!")
