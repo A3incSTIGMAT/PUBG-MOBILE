@@ -11,4 +11,4 @@ class Player(Base):
     username = Column(String(50))
     balance = Column(Integer, default=100)
     health = Column(Integer, default=100)
-    is_admin = Column(Boolean, default=False))
+    is_admin = Column(Boolean, default=False)
