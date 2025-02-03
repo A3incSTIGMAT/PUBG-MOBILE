@@ -9,6 +9,7 @@ from bot.handlers import base, battle, shop
 from bot.middlewares import ThrottlingMiddleware
 from bot.models import Base
 from bot.utils import handle_exception
+from bot.database import DatabaseManager
 
 # Настройка логирования
 logging.basicConfig(
