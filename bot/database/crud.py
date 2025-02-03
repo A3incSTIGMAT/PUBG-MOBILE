@@ -6,4 +6,11 @@ class DatabaseManager:
         self.session = session
 
     async def get_player(self, user_id: int):
-        # Ваша реализация методов...
+        # Пример реализации метода
+        # Здесь может быть запрос к базе данных для получения информации о игроке
+        result = await self.session.execute(
+            "SELECT * FROM players WHERE user_id = :user_id", {"user_id": user_id}
+        )
+        player = result.fetchone()
+        return player
+
