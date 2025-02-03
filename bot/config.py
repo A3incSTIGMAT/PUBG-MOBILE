@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+from bot.config import BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PATH
 
 load_dotenv()
 
