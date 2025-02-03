@@ -63,4 +63,4 @@ async def process_buy(message: Message, state: FSMContext):
     conn.close()
     
     await message.answer(f"✅ Вы купили {item_name}!")
-    await state.clear()
+    await state.clear() проверь правильность кода
