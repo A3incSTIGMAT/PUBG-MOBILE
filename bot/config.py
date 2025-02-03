@@ -12,5 +12,4 @@ class Config:
 
     @classmethod
     def check_env(cls):
-        if not cls.BOT_TOKEN:
-            raise ValueError("BOT_TOKEN не установлен в .env!")
+        
