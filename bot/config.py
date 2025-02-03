@@ -6,12 +6,9 @@ load_dotenv()
 class Settings:
     # Основные настройки
     BOT_TOKEN: str = os.getenv("BOT_TOKEN")
-    ADMIN_IDS: list = list(map(int, os.getenv("ADMIN_IDS", "").split(',')))
+    ADMIN_IDS: list[int] = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
     WEBHOOK_URL: str = os.getenv("WEBHOOK_URL")
     WEBHOOK_PATH: str = os.getenv("WEBHOOK_PATH", "/webhook")
-    
-    # Настройки БД
-    DB_URL: str = os.getenv("DB_URL", "sqlite+aiosqlite:///game.db")
     
     # Проверка конфигурации
     @classmethod
