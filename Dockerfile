@@ -9,3 +9,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "-m", "bot.main"]
 
+COPY bot/ /app/bot/  # Убедитесь, что эта строка есть
