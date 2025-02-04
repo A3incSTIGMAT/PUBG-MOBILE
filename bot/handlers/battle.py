@@ -1,16 +1,12 @@
-from aiogram import Router, F
-from aiogram.types import Message
+from aiogram import Router
 from aiogram.filters import Command
-from bot.database import DatabaseManager
+from aiogram.types import Message
+from bot.database import DatabaseManager, get_session
 
 router = Router()
-db = DatabaseManager()
 
 @router.message(Command("battle"))
 async def cmd_battle(message: Message):
-    user = await db.fetch_one("SELECT * FROM players WHERE user_id = ?", (message.from_user.id,))
-    if not user:
-        await message.answer("❌ Сначала зарегистрируйтесь через /start")
-        return
-    
-    await message.answer("⚔️ Вы в бою! Используйте:\n/attack - Атака\n/defend - Защита")
+    async with get_session() as session:
+        db = DatabaseManager(session)  # ✅ Сессия передана
+        # Ваша логика боя...
