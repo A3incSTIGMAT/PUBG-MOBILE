@@ -10,6 +10,18 @@ from bot.middlewares import ThrottlingMiddleware
 from bot.models import Base
 from bot.utils import handle_exception
 from bot.database import DatabaseManager
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.filters import StateFilter
+
+# Определите свои состояния FSM
+class MyState(StatesGroup):
+    waiting_item_name = State()
+
+# Используйте фильтр StateFilter
+@router.message(StateFilter(MyState.waiting_item_name), F.text)
+async def handler(message: Message):
+    # Логика обработчика
+    pass
 
 # Настройка логирования
 logging.basicConfig(
