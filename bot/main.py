@@ -12,7 +12,11 @@ from bot.utils import handle_exception
 from bot.database import DatabaseManager
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.filters import StateFilter
-from bot.middlewares import ThrottlingMiddleware
+from aiogram import Dispatcher
+from bot.middlewares.throttling import ThrottlingMiddleware
+
+def setup_middlewares(dp: Dispatcher):
+    dp.message.middleware.register(ThrottlingMiddleware())
 
 # Определите свои состояния FSM
 class MyState(StatesGroup):
