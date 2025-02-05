@@ -1,21 +1,21 @@
+# bot/middlewares/throttling.py
 from aiogram import Dispatcher
 from aiogram.types import Message
-from aiogram.dispatcher.middlewares import BaseMiddleware
 import time
 
-class ThrottlingMiddleware(BaseMiddleware):
-    def __init__(self, limit=0.5):
-        self.last_update = {}
+class ThrottlingMiddleware:
+    def __init__(self, limit=1.0):
         self.limit = limit
-        super().__init__()
+        self.last_time = {}
 
-    async def on_pre_process_message(self, message: Message, data: dict):
-        user_id = message.from_user.id
+    async def __call__(self, handler, event: Message, data: dict):
+        user_id = event.from_user.id
         current_time = time.time()
-        
-        if user_id in self.last_update:
-            if current_time - self.last_update[user_id] < self.limit:
-                await message.answer("⚠️ Слишком много запросов!")
-                raise CancelHandler()
-        
-        self.last_update[user_id] = current_time
+
+        if user_id in self.last_time:
+            if current_time - self.last_time[user_id] < self.limit:
+                await event.answer("🚫 Подождите перед следующим запросом!")
+                return
+
+        self.last_time[user_id] = current_time
+        return await handler(event, data)
