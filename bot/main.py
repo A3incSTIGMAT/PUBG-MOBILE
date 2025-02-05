@@ -55,7 +55,7 @@ def setup_middlewares(dp: Dispatcher):
     """
     Настройка миддлварей для диспетчера.
     """
-    dp.update.middleware(ThrottlingMiddleware())  # Поставить ограничение на количество запросов
+    dp.message.middleware(ThrottlingMiddleware())  # Поставить ограничение на количество запросов
 
 def setup_routers(dp: Dispatcher):
     """
